@@ -90,6 +90,37 @@ export default function App() {
   const [checkerStep, setCheckerStep] = useState(1);
   const [checkerResult, setCheckerResult] = useState(null);
 
+  // Function: เช็คสถานะการหมดอายุ (MM/YY)
+  const getExpiryStatus = useCallback((expiryStr) => {
+    if (!expiryStr || expiryStr === "-" || !expiryStr.includes('/')) return "normal";
+    
+    try {
+      const parts = expiryStr.split('/');
+      const month = parseInt(parts[0]);
+      const yearShort = parseInt(parts[1]);
+      
+      if (isNaN(month) || isNaN(yearShort)) return "normal";
+      
+      const fullYear = 2000 + yearShort;
+      const expiryDate = new Date(fullYear, month, 0); // วันสุดท้ายของเดือนนั้น
+      const today = new Date();
+      
+      // ล้างเวลาออกเพื่อเทียบวันที่
+      today.setHours(0, 0, 0, 0);
+      
+      if (expiryDate < today) return "expired"; // หมดอายุแล้ว
+      
+      // เช็คว่าเหลืออีกกี่เดือน (ประมาณ 90 วัน)
+      const diffTime = expiryDate - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays <= 90) return "warning"; // จะหมดใน 3 เดือน
+      return "normal";
+    } catch (e) {
+      return "normal";
+    }
+  }, []);
+
   useEffect(() => {
     const saved = localStorage.getItem('savedBranch');
     if (saved) {
@@ -266,16 +297,23 @@ export default function App() {
                   const stock = inventory[`${selectedBranch}_${med.id}`] || { count: 0, expiry: '-' };
                   const isLow = stock.count <= 3 && stock.count > 0;
                   const isEmpty = stock.count <= 0;
+                  const expStatus = getExpiryStatus(stock.expiry);
+
                   return (
                     <button key={med.id} onClick={() => setSelectedMed(med)} className="bg-white p-5 rounded-[2.2rem] border border-slate-100 flex items-center gap-5 text-left active:scale-[0.98] transition-all shadow-sm group">
                       <div className={`w-14 h-14 rounded-2xl ${med.theme || 'bg-slate-50'} flex items-center justify-center text-2xl group-active:scale-90 transition-transform shadow-inner`}>{med.emoji || '📦'}</div>
                       <div className="flex-1">
                         <h3 className="font-extrabold text-slate-800 text-base">{med.brand}</h3>
-                        <div className="flex gap-3 mt-1">
+                        <div className="flex flex-wrap gap-2 mt-1">
                           <span className={`text-[10px] font-black uppercase flex items-center gap-1 ${isEmpty ? 'text-rose-500' : (isLow ? 'text-orange-500' : 'text-emerald-500')}`}>
                             สต็อก: {stock.count}
                           </span>
-                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-tighter">EXP: {stock.expiry}</span>
+                          <span className={`text-[10px] font-black uppercase tracking-tighter ${
+                            expStatus === 'expired' ? 'text-rose-600 bg-rose-50 px-1 rounded' : 
+                            expStatus === 'warning' ? 'text-amber-500 bg-amber-50 px-1 rounded' : 'text-slate-400'
+                          }`}>
+                            EXP: {stock.expiry} {expStatus === 'expired' ? '⚠️' : ''}
+                          </span>
                         </div>
                       </div>
                       <span className="text-slate-200">{">"}</span>
@@ -291,6 +329,7 @@ export default function App() {
           </div>
         )}
 
+        {/* Checker & Guide Tab content remain unchanged... */}
         {activeTab === 'checker' && (
           <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100">
             {!checkerResult ? (
@@ -369,8 +408,23 @@ export default function App() {
               <h3 className="font-extrabold text-2xl text-slate-900 tracking-tight">{selectedMed.brand}</h3>
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">{selectedMed.category}</p>
             </div>
+
             {!showManageMode ? (
               <div className="space-y-6">
+                {/* Expired Warning Alert */}
+                {getExpiryStatus(editValues.expiry) === 'expired' && (
+                  <div className="bg-rose-50 border border-rose-100 p-4 rounded-2xl flex items-center gap-3 animate-bounce">
+                    <span className="text-2xl">⚠️</span>
+                    <p className="text-rose-600 text-xs font-black uppercase">ยานี้หมดอายุแล้ว ห้ามจ่ายโดยเด็ดขาด!</p>
+                  </div>
+                )}
+                {getExpiryStatus(editValues.expiry) === 'warning' && (
+                  <div className="bg-amber-50 border border-amber-100 p-4 rounded-2xl flex items-center gap-3">
+                    <span className="text-2xl">⏳</span>
+                    <p className="text-amber-600 text-xs font-black uppercase">ระวัง: ยาจะหมดอายุในอีกไม่เกิน 3 เดือน</p>
+                  </div>
+                )}
+
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-sky-50/50 p-4 rounded-2xl border border-sky-100 text-center">
                     <span className="text-[9px] font-black text-sky-400 uppercase block mb-1">สต็อกปัจจุบัน</span>
@@ -381,7 +435,13 @@ export default function App() {
                     <p className="text-xl font-black text-slate-800">{editValues.expiry || '-'}</p>
                   </div>
                 </div>
-                <button disabled={loading || editValues.count <= 0 || showSuccessToast} onClick={() => performUpdate(selectedMed.id, editValues.count - 1, editValues.expiry, 'take')} className={`w-full h-16 rounded-2xl font-black text-lg flex items-center justify-center gap-3 transition-all ${editValues.count > 0 ? 'bg-sky-500 text-white shadow-lg active:scale-95' : 'bg-slate-100 text-slate-300'}`}>
+                <button 
+                  disabled={loading || editValues.count <= 0 || showSuccessToast || getExpiryStatus(editValues.expiry) === 'expired'} 
+                  onClick={() => performUpdate(selectedMed.id, editValues.count - 1, editValues.expiry, 'take')} 
+                  className={`w-full h-16 rounded-2xl font-black text-lg flex items-center justify-center gap-3 transition-all ${
+                    (editValues.count > 0 && getExpiryStatus(editValues.expiry) !== 'expired') ? 'bg-sky-500 text-white shadow-lg active:scale-95' : 'bg-slate-100 text-slate-300 cursor-not-allowed'
+                  }`}
+                >
                   {loading ? "กำลังบันทึก..." : `ยืนยันการเบิกยา (-1)`}
                 </button>
                 <button onClick={() => setShowManageMode(true)} className="w-full text-center text-[10px] font-black text-slate-300 uppercase tracking-widest py-2 flex items-center justify-center gap-2">🛠️ ตั้งค่าสต็อก / วันหมดอายุ</button>
@@ -429,6 +489,3 @@ export default function App() {
     </div>
   );
 }
-
-
-
