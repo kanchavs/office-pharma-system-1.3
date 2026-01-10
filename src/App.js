@@ -248,8 +248,8 @@ export default function App() {
           </div>
         </div>
         <div className="flex gap-2">
-          <button onClick={fetchData} className="p-2.5 rounded-lg border border-slate-100 bg-white text-slate-400">🔄</button>
-          <button onClick={handleLogout} className="p-2.5 rounded-lg border border-rose-50 bg-rose-50/30 text-rose-400">🚪</button>
+          <button onClick={fetchData} className="p-2.5 rounded-lg border border-slate-100 bg-white text-slate-400">🔃</button>
+          <button onClick={handleLogout} className="p-2.5 rounded-lg border border-rose-50 bg-rose-50/30 text-rose-400">❌</button>
         </div>
       </header>
 
@@ -429,3 +429,4 @@ export default function App() {
     </div>
   );
 }
+
