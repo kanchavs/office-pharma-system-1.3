@@ -8,7 +8,7 @@ const BRANCHES = ["โรงอัดรังสิต", "โรงอัด DC
 const SYMPTOMS_QUIZ = [
   { id: 1, question: "คุณมีไข้ หรือตัวร้อนร่วมด้วยไหม?", options: [{ label: "มีไข้", next: 2 }, { label: "ไม่มีไข้", next: 3 }] },
   { id: 2, question: "คุณต้องขับรถ หรือทำงานที่ต้องใช้สมาธิสูงไหม?", options: [{ label: "ใช่ ต้องใช้สมาธิ/ขับรถ", next: 'result', recommendation: 'ยาพาราเซตามอล', note: 'เลือกยาพาราฯ เพื่อไม่ให้ง่วงนอนขณะทำงาน' }, { label: "ไม่ พักผ่อนได้", next: 'result', recommendation: 'ทิฟฟี่ / ดีคอลเจน', note: 'ใช้ยาสูตรผสมได้แต่จะทำให้ง่วง' }] },
-  { id: 3, question: "อาการหลักตอนนี้คืออะไร?", options: [{ label: "คันผิวหนัง / แมลงกัด", next: 'result', recommendation: 'คาราไมน์ / ยาทาแก้คัน' }, { label: "จาม / น้ำมูก (แต่ทำงานต่อ)", next: 'result', recommendation: 'ยาแก้แพ้ชนิดไม่ง่วง' }, { label: "ปวดฟันอย่างมาก", next: 'result', recommendation: 'ยาพาราเซตามอล' }, { label: "ท้องอืด / แสบท้อง", next: 4 }, { label: "ท้องเสีย / ถ่ายเหลว", next: 5 }, { label: "เวียนหัว / หน้ามืด", next: 6 }, { label: "ปวดเมื่อยกล้ามเนื้อ", next: 7 }, { label: "ระคายเคืองตา / ฝุ่นเข้าตา", next: 8 }] },
+  { id: 3, question: "อาการหลักตอนนี้คืออะไร?", options: [{ label: "คันผิวหนัง / แมลงกัด", next: 'result', recommendation: 'คาราไมน์ / ยาทาแก้คัน' }, { label: "จาม / น้ำมูก (แต่ทำงานต่อ)", next: 'result', recommendation: 'ยาแก้แพ้ชนิดไม่ง่วง' }, { label: "ปวดฟันอย่างมาก", next: 'result', recommendation: 'ยาแก้ปวดอย่างรุนแรง(อันตราย⚠️)' }, { label: "ท้องอืด / แสบท้อง", next: 4 }, { label: "ท้องเสีย / ถ่ายเหลว", next: 5 }, { label: "เวียนหัว / หน้ามืด", next: 6 }, { label: "ปวดเมื่อยกล้ามเนื้อ", next: 7 }, { label: "ระคายเคืองตา / ฝุ่นเข้าตา", next: 8 }] },
   { id: 4, question: "ลักษณะอาการท้องอืดของคุณเป็นแบบไหน?", options: [{ label: "แน่นท้อง/มวนท้อง (แบบน้ำ)", next: 'result', recommendation: 'ยาธาตุน้ำขาว (กระต่ายบิน)' }, { label: "แสบท้อง/มีลมมาก (แบบเคี้ยว)", next: 'result', recommendation: 'แอนตาซิล / แอร์-เอ็กซ์' }] },
   { id: 5, question: "คุณต้องการเน้นรักษาแบบไหน?", options: [{ label: "หยุดถ่าย/ดูดซับสารพิษ", next: 'result', recommendation: 'ยาผงถ่าน (คาร์บอน)', note: 'ควรทานผงถ่านเพื่อดูดซับเชื้อโรค และทานเกลือแร่ควบคู่กัน' }, { label: "ชดเชยน้ำ (ป้องกันอ่อนเพลีย)", next: 'result', recommendation: 'ผงเกลือแร่ (ORS)', note: 'เน้นจิบเกลือแร่เรื่อยๆ เพื่อป้องกันอาการขาดน้ำ' }] },
   { id: 6, question: "ต้องการการปฐมพยาบาลแบบไหน?", options: [{ label: "ยาดมพกพาสะดวก", next: 'result', recommendation: 'ยาดมแกวิงเวียน' }, { label: "หน้ามืดเป็นลม รุนแรง", next: 'result', recommendation: 'แอมโมเนียหอม' }] },
@@ -489,3 +489,4 @@ export default function App() {
     </div>
   );
 }
+
