@@ -200,7 +200,7 @@ export default function App() {
   if (!isConfirmed && !isAdmin) {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8 text-center">
-        <div className="w-24 h-24 bg-sky-50 rounded-[2.5rem] mx-auto mb-8 flex items-center justify-center shadow-xl shadow-sky-100/50 text-4xl">👩‍⚕️</div>
+        <div className="w-24 h-24 bg-sky-50 rounded-[2.5rem] mx-auto mb-8 flex items-center justify-center shadow-xl shadow-sky-100/50 text-4xl">💊</div>
         <h1 className="text-4xl font-extrabold text-slate-900 mb-3 tracking-tight">Office Pharma</h1>
         <p className="text-slate-400 font-bold text-xs mb-12 uppercase tracking-[0.2em]">Inventory System</p>
         <div className="space-y-4 w-full max-w-sm">
@@ -429,5 +429,6 @@ export default function App() {
     </div>
   );
 }
+
 
 
