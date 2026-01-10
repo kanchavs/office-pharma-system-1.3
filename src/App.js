@@ -200,7 +200,7 @@ export default function App() {
   if (!isConfirmed && !isAdmin) {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8 text-center">
-        <div className="w-24 h-24 bg-sky-50 rounded-[2.5rem] mx-auto mb-8 flex items-center justify-center shadow-xl shadow-sky-100/50 text-4xl">❤️</div>
+        <div className="w-24 h-24 bg-sky-50 rounded-[2.5rem] mx-auto mb-8 flex items-center justify-center shadow-xl shadow-sky-100/50 text-4xl">👩‍⚕️</div>
         <h1 className="text-4xl font-extrabold text-slate-900 mb-3 tracking-tight">Office Pharma</h1>
         <p className="text-slate-400 font-bold text-xs mb-12 uppercase tracking-[0.2em]">Inventory System</p>
         <div className="space-y-4 w-full max-w-sm">
@@ -258,7 +258,7 @@ export default function App() {
           <div className="space-y-6">
             <div className="flex gap-3">
               <input type="text" placeholder="🔍 ค้นหาชื่อยาหรือประเภท..." className="w-full h-14 bg-white border border-slate-100 p-4 rounded-2xl text-base font-bold text-slate-700 outline-none shadow-sm focus:ring-4 focus:ring-sky-50 transition-all" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-              <button onClick={() => setIsAdmin(true)} className="w-14 h-14 bg-white border border-slate-100 rounded-2xl flex items-center justify-center text-slate-400 shadow-sm">⚙️</button>
+              <button onClick={() => setIsAdmin(true)} className="w-14 h-14 bg-white border border-slate-100 rounded-2xl flex items-center justify-center text-slate-400 shadow-sm">📂</button>
             </div>
             <div className="grid gap-4">
               {medicineMaster.length > 0 ? (
@@ -429,4 +429,5 @@ export default function App() {
     </div>
   );
 }
+
 
