@@ -1,9 +1,17 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 
 // URL Google Apps Script
-const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbzYiqEePmm39eQvaKoSTubgsyebYCDEHSahCxzNk2rfAV-FMFZqPIX6Q7GbUv5mKVnfMQ/exec"; 
+const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbxbbs_hgxvTmnCWomqETbN0PgZ3li1haBnBAJIm2VNGEFSdRF9jHvTuBS6rcwSMsFtrNQ/exec"; 
 
 const BRANCHES = ["โรงอัดรังสิต", "โรงอัด DC.วังน้อย", "โรงอัดเชียงใหม่", "โรงอัดสายไหม", "โรงอัดพานทอง", "โรงอัดระยอง", "โรงอัดปทุมธานี", "โรงอัดอยุธยา", "โรงอัดบางบัวทอง", "โรงอัดเพชรบุรี", "โรงอัดโคราช", "โรงอัดขอนแก่น", "โรงอัดอุดรธานี", "โรงอัดหาดใหญ่", "โรงอัดพัทยา", "โรงอัดศรีนครินทร์", "โรงอัดมีนบุรี", "โรงอัดบ่อวิน1", "โรงอัดบ่อวิน2", "โรงอัดปิ่นทอง", "โรงอัดบางใหญ่"];
+
+// นิยามประเภทหลัก
+const MAIN_CATEGORIES = [
+  { id: 'all', label: 'ทั้งหมด', icon: '📦' },
+  { id: 'internal', label: 'ยาใช้ภายใน', icon: '💊', color: 'text-blue-600', bg: 'bg-blue-50' },
+  { id: 'external', label: 'ยาใช้ภายนอก', icon: '🧴', color: 'text-purple-600', bg: 'bg-purple-50' },
+  { id: 'supplies', label: 'เวชภัณฑ์', icon: '🩹', color: 'text-orange-600', bg: 'bg-orange-50' }
+];
 
 const SYMPTOMS_QUIZ = [
   { id: 1, question: "คุณมีไข้ หรือตัวร้อนร่วมด้วยไหม?", options: [{ label: "มีไข้", next: 2 }, { label: "ไม่มีไข้", next: 3 }] },
@@ -11,7 +19,7 @@ const SYMPTOMS_QUIZ = [
   { id: 3, question: "อาการหลักตอนนี้คืออะไร?", options: [{ label: "คันผิวหนัง / แมลงกัด", next: 'result', recommendation: 'คาราไมน์ / ยาทาแก้คัน' }, { label: "จาม / น้ำมูก (แต่ทำงานต่อ)", next: 'result', recommendation: 'ยาแก้แพ้ชนิดไม่ง่วง' }, { label: "ปวดฟันอย่างมาก", next: 'result', recommendation: 'ยาพาราเซตามอล' }, { label: "ท้องอืด / แสบท้อง", next: 4 }, { label: "ท้องเสีย / ถ่ายเหลว", next: 5 }, { label: "เวียนหัว / หน้ามืด", next: 6 }, { label: "ปวดเมื่อยกล้ามเนื้อ", next: 7 }, { label: "ระคายเคืองตา / ฝุ่นเข้าตา", next: 8 }] },
   { id: 4, question: "ลักษณะอาการท้องอืดของคุณเป็นแบบไหน?", options: [{ label: "แน่นท้อง/มวนท้อง (แบบน้ำ)", next: 'result', recommendation: 'ยาธาตุน้ำขาว (กระต่ายบิน)' }, { label: "แสบท้อง/มีลมมาก (แบบเคี้ยว)", next: 'result', recommendation: 'แอนตาซิล / แอร์-เอ็กซ์' }] },
   { id: 5, question: "คุณต้องการเน้นรักษาแบบไหน?", options: [{ label: "หยุดถ่าย/ดูดซับสารพิษ", next: 'result', recommendation: 'ยาผงถ่าน (คาร์บอน)', note: 'ควรทานผงถ่านเพื่อดูดซับเชื้อโรค และทานเกลือแร่ควบคู่กัน' }, { label: "ชดเชยน้ำ (ป้องกันอ่อนเพลีย)", next: 'result', recommendation: 'ผงเกลือแร่ (ORS)', note: 'เน้นจิบเกลือแร่เรื่อยๆ เพื่อป้องกันอาการขาดน้ำ' }] },
-  { id: 6, question: "ต้องการการปฐมพยาบาลแบบไหน?", options: [{ label: "ยาดมพกพาสะดวก", next: 'result', recommendation: 'ยาดมแก้วิงเวียน' }, { label: "หน้ามืดเป็นลม รุนแรง", next: 'result', recommendation: 'แอมโมเนียหอม' }] },
+  { id: 6, question: "ต้องการการปฐมพยาบาลแบบไหน?", options: [{ label: "ยาดมพกพาสะดวก", next: 'result', recommendation: 'ยาดมแกวิงเวียน' }, { label: "หน้ามืดเป็นลม รุนแรง", next: 'result', recommendation: 'แอมโมเนียหอม' }] },
   { id: 7, question: "ปวดมานานแค่ไหนแล้ว?", options: [{ label: "ปวดทันที / บาดเจ็บใหม่ๆ", next: 'result', recommendation: 'เคาน์เตอร์เพน สีแดง (สูตรร้อน)' }, { label: "ปวดมาสักพัก / เรื้อรัง / มีบวม", next: 'result', recommendation: 'เคาน์เตอร์เพน สีฟ้า (สูตรเย็น)' }] },
   { id: 8, question: "อาการที่ตาของคุณเป็นอย่างไร?", options: [{ label: "ฝุ่นเข้าตา / ต้องการล้างตา", next: 'result', recommendation: 'น้ำยาล้างตาออฟซ่า' }, { label: "คันตา / ตาแดงจากอาการแพ้", next: 'result', recommendation: 'ยาแก้แพ้ระคายเคืองตา' }] }
 ];
@@ -82,6 +90,7 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [fetchLoading, setFetchLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentCategoryFilter, setCurrentCategoryFilter] = useState('all');
   const [showManageMode, setShowManageMode] = useState(false);
   const [editValues, setEditValues] = useState({ count: 0, expiry: "" });
   
@@ -90,7 +99,7 @@ export default function App() {
   const [checkerStep, setCheckerStep] = useState(1);
   const [checkerResult, setCheckerResult] = useState(null);
 
-  // Function: เช็คสถานะการหมดอายุ (MM/YY)
+  // Helper to determine expiry status
   const getExpiryStatus = useCallback((expiryStr) => {
     if (!expiryStr || expiryStr === "-" || !expiryStr.includes('/')) return "normal";
     
@@ -102,19 +111,15 @@ export default function App() {
       if (isNaN(month) || isNaN(yearShort)) return "normal";
       
       const fullYear = 2000 + yearShort;
-      const expiryDate = new Date(fullYear, month, 0); // วันสุดท้ายของเดือนนั้น
+      const expiryDate = new Date(fullYear, month, 0); 
       const today = new Date();
-      
-      // ล้างเวลาออกเพื่อเทียบวันที่
       today.setHours(0, 0, 0, 0);
       
-      if (expiryDate < today) return "expired"; // หมดอายุแล้ว
-      
-      // เช็คว่าเหลืออีกกี่เดือน (ประมาณ 90 วัน)
+      if (expiryDate < today) return "expired";
       const diffTime = expiryDate - today;
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       
-      if (diffDays <= 90) return "warning"; // จะหมดใน 3 เดือน
+      if (diffDays <= 90) return "warning";
       return "normal";
     } catch (e) {
       return "normal";
@@ -209,11 +214,15 @@ export default function App() {
   };
 
   const filteredMeds = useMemo(() => {
-    return (medicineMaster || []).filter(m => 
-      (m.brand || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (m.category || "").toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [medicineMaster, searchTerm]);
+    return (medicineMaster || []).filter(m => {
+      const matchesSearch = (m.brand || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+                            (m.category || "").toLowerCase().includes(searchTerm.toLowerCase());
+      
+      const matchesCategory = currentCategoryFilter === 'all' || m.mainType === currentCategoryFilter;
+      
+      return matchesSearch && matchesCategory;
+    });
+  }, [medicineMaster, searchTerm, currentCategoryFilter]);
 
   const handleBranchConfirm = () => {
     if (selectedBranch) {
@@ -259,7 +268,7 @@ export default function App() {
               <div className={`w-14 h-14 rounded-2xl ${m.theme || 'bg-slate-100'} flex items-center justify-center text-2xl shadow-inner`}>{m.emoji || '📦'}</div>
               <div className="flex-1">
                 <h3 className="font-bold text-slate-800 text-base">{m.brand}</h3>
-                <p className="text-[10px] text-slate-400 font-black uppercase tracking-wider">{m.id} • {m.category}</p>
+                <p className="text-[10px] text-slate-400 font-black uppercase tracking-wider">{m.id} • {m.mainType === 'internal' ? 'ยาใช้ภายใน' : m.mainType === 'external' ? 'ยาใช้ภายนอก' : 'เวชภัณฑ์'}</p>
               </div>
             </div>
           ))}
@@ -279,13 +288,12 @@ export default function App() {
           </div>
         </div>
         <div className="flex gap-2">
-          {/* ปุ่ม Refresh ที่เพิ่มสถานะหมุนขณะโหลดข้อมูล */}
           <button 
             onClick={fetchData} 
             disabled={fetchLoading}
             className="p-2.5 rounded-lg border border-slate-100 bg-white text-slate-400 active:scale-90 transition-all disabled:opacity-50"
           >
-            <div className={fetchLoading ? "animate-spin" : ""}>🔄</div>
+            <div className={fetchLoading ? "animate-spin" : ""}>🔃</div>
           </button>
           <button onClick={handleLogout} className="p-2.5 rounded-lg border border-rose-50 bg-rose-50/30 text-rose-400 active:scale-90 transition-all">❌</button>
         </div>
@@ -298,6 +306,25 @@ export default function App() {
               <input type="text" placeholder="🔍 ค้นหาชื่อยาหรือประเภท..." className="w-full h-14 bg-white border border-slate-100 p-4 rounded-2xl text-base font-bold text-slate-700 outline-none shadow-sm focus:ring-4 focus:ring-sky-50 transition-all" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
               <button onClick={() => setIsAdmin(true)} className="w-14 h-14 bg-white border border-slate-100 rounded-2xl flex items-center justify-center text-slate-400 shadow-sm">📂</button>
             </div>
+
+            {/* หมวดหมู่ Filter */}
+            <div className="flex overflow-x-auto gap-2 pb-2 -mx-1 px-1 no-scrollbar">
+              {MAIN_CATEGORIES.map(cat => (
+                <button
+                  key={cat.id}
+                  onClick={() => setCurrentCategoryFilter(cat.id)}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-full whitespace-nowrap text-xs font-black uppercase transition-all border ${
+                    currentCategoryFilter === cat.id 
+                    ? `${cat.bg} border-sky-200 ${cat.color} shadow-sm ring-2 ring-sky-50` 
+                    : 'bg-white border-slate-100 text-slate-400'
+                  }`}
+                >
+                  <span>{cat.icon}</span>
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
             <div className="grid gap-4">
               {medicineMaster.length > 0 ? (
                 filteredMeds.map(med => {
@@ -305,12 +332,23 @@ export default function App() {
                   const isLow = stock.count <= 3 && stock.count > 0;
                   const isEmpty = stock.count <= 0;
                   const expStatus = getExpiryStatus(stock.expiry);
+                  const catInfo = MAIN_CATEGORIES.find(c => c.id === med.mainType) || MAIN_CATEGORIES[0];
 
                   return (
                     <button key={med.id} onClick={() => setSelectedMed(med)} className="bg-white p-5 rounded-[2.2rem] border border-slate-100 flex items-center gap-5 text-left active:scale-[0.98] transition-all shadow-sm group">
-                      <div className={`w-14 h-14 rounded-2xl ${med.theme || 'bg-slate-50'} flex items-center justify-center text-2xl group-active:scale-90 transition-transform shadow-inner`}>{med.emoji || '📦'}</div>
+                      <div className={`w-14 h-14 rounded-2xl ${med.theme || 'bg-slate-50'} flex items-center justify-center text-2xl group-active:scale-90 transition-transform shadow-inner relative`}>
+                        {med.emoji || '📦'}
+                        <div className={`absolute -top-1 -right-1 w-6 h-6 rounded-full ${catInfo.bg} flex items-center justify-center text-[10px] shadow-sm border border-white`}>
+                          {catInfo.icon}
+                        </div>
+                      </div>
                       <div className="flex-1">
-                        <h3 className="font-extrabold text-slate-800 text-base">{med.brand}</h3>
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-extrabold text-slate-800 text-base">{med.brand}</h3>
+                          <span className={`text-[8px] px-1.5 py-0.5 rounded font-black uppercase ${catInfo.bg} ${catInfo.color}`}>
+                            {catInfo.label}
+                          </span>
+                        </div>
                         <div className="flex flex-wrap gap-2 mt-1">
                           <span className={`text-[10px] font-black uppercase flex items-center gap-1 ${isEmpty ? 'text-rose-500' : (isLow ? 'text-orange-500' : 'text-emerald-500')}`}>
                             สต็อก: {stock.count}
@@ -329,7 +367,7 @@ export default function App() {
                 })
               ) : (
                 <div className="text-center py-20 bg-white rounded-[2.5rem] border border-dashed border-slate-200">
-                  <p className="text-slate-400 font-bold text-sm">{fetchLoading ? "กำลังโหลดข้อมูล..." : "❌ ไม่พบข้อมูลยา"}</p>
+                  <p className="text-slate-400 font-bold text-sm">{fetchLoading ? "กำลังโหลดข้อมูล..." : "❌ ไม่พบรายการในหมวดนี้"}</p>
                 </div>
               )}
             </div>
@@ -353,7 +391,7 @@ export default function App() {
                 <div className="text-5xl mb-4">✅</div>
                 <h4 className="text-[11px] font-black text-slate-400 uppercase mb-1">คำแนะนำ</h4>
                 <p className="text-3xl font-black text-slate-900">{checkerResult.med}</p>
-                <p className="text-sm text-slate-500 bg-slate-50 p-4 rounded-2xl border border-slate-100">{checkerResult.note || 'กรุณาตรวจสอบวิธีการใช้อีกครั้ง'}</p>
+                <p className="text-sm text-slate-500 bg-slate-50 p-4 rounded-2xl border border-slate-100">{checkerResult.note || 'กรุณาตรวจสอบวิธีการใช้อีกครั้งก่อนรับประทาน'}</p>
                 <div className="space-y-3 pt-4">
                   <button onClick={() => { setActiveTab('inventory'); setSearchTerm(checkerResult.med); setCheckerResult(null); setCheckerStep(1); }} className="w-full py-5 bg-indigo-600 text-white font-bold rounded-3xl shadow-lg active:scale-95 transition-transform">ไปที่คลังยา</button>
                   <button onClick={() => { setCheckerStep(1); setCheckerResult(null); }} className="w-full py-4 bg-slate-100 text-slate-600 font-bold rounded-3xl text-sm transition-all">เริ่มประเมินใหม่</button>
@@ -423,13 +461,6 @@ export default function App() {
                     <p className="text-rose-600 text-xs font-black uppercase">ยานี้หมดอายุแล้ว ห้ามจ่ายโดยเด็ดขาด!</p>
                   </div>
                 )}
-                {getExpiryStatus(editValues.expiry) === 'warning' && (
-                  <div className="bg-amber-50 border border-amber-100 p-4 rounded-2xl flex items-center gap-3">
-                    <span className="text-2xl">⏳</span>
-                    <p className="text-amber-600 text-xs font-black uppercase">ระวัง: ยาจะหมดอายุในอีกไม่เกิน 3 เดือน</p>
-                  </div>
-                )}
-
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-sky-50/50 p-4 rounded-2xl border border-sky-100 text-center">
                     <span className="text-[9px] font-black text-sky-400 uppercase block mb-1">สต็อกปัจจุบัน</span>
