@@ -11,7 +11,7 @@ const SYMPTOMS_QUIZ = [
   { id: 3, question: "อาการหลักตอนนี้คืออะไร?", options: [{ label: "คันผิวหนัง / แมลงกัด", next: 'result', recommendation: 'คาราไมน์ / ยาทาแก้คัน' }, { label: "จาม / น้ำมูก (แต่ทำงานต่อ)", next: 'result', recommendation: 'ยาแก้แพ้ชนิดไม่ง่วง' }, { label: "ปวดฟันอย่างมาก", next: 'result', recommendation: 'ยาแก้ปวดอย่างรุนแรง(อันตราย⚠️)' }, { label: "ท้องอืด / แสบท้อง", next: 4 }, { label: "ท้องเสีย / ถ่ายเหลว", next: 5 }, { label: "เวียนหัว / หน้ามืด", next: 6 }, { label: "ปวดเมื่อยกล้ามเนื้อ", next: 7 }, { label: "ระคายเคืองตา / ฝุ่นเข้าตา", next: 8 }] },
   { id: 4, question: "ลักษณะอาการท้องอืดของคุณเป็นแบบไหน?", options: [{ label: "แน่นท้อง/มวนท้อง (แบบน้ำ)", next: 'result', recommendation: 'ยาธาตุน้ำขาว (กระต่ายบิน)' }, { label: "แสบท้อง/มีลมมาก (แบบเคี้ยว)", next: 'result', recommendation: 'แอนตาซิล / แอร์-เอ็กซ์' }] },
   { id: 5, question: "คุณต้องการเน้นรักษาแบบไหน?", options: [{ label: "หยุดถ่าย/ดูดซับสารพิษ", next: 'result', recommendation: 'ยาผงถ่าน (คาร์บอน)', note: 'ควรทานผงถ่านเพื่อดูดซับเชื้อโรค และทานเกลือแร่ควบคู่กัน' }, { label: "ชดเชยน้ำ (ป้องกันอ่อนเพลีย)", next: 'result', recommendation: 'ผงเกลือแร่ (ORS)', note: 'เน้นจิบเกลือแร่เรื่อยๆ เพื่อป้องกันอาการขาดน้ำ' }] },
-  { id: 6, question: "ต้องการการปฐมพยาบาลแบบไหน?", options: [{ label: "ยาดมพกพาสะดวก", next: 'result', recommendation: 'ยาดมแกวิงเวียน' }, { label: "หน้ามืดเป็นลม รุนแรง", next: 'result', recommendation: 'แอมโมเนียหอม' }] },
+  { id: 6, question: "ต้องการการปฐมพยาบาลแบบไหน?", options: [{ label: "ยาดมพกพาสะดวก", next: 'result', recommendation: 'ยาดมแก้วิงเวียน' }, { label: "หน้ามืดเป็นลม รุนแรง", next: 'result', recommendation: 'แอมโมเนียหอม' }] },
   { id: 7, question: "ปวดมานานแค่ไหนแล้ว?", options: [{ label: "ปวดทันที / บาดเจ็บใหม่ๆ", next: 'result', recommendation: 'เคาน์เตอร์เพน สีแดง (สูตรร้อน)' }, { label: "ปวดมาสักพัก / เรื้อรัง / มีบวม", next: 'result', recommendation: 'เคาน์เตอร์เพน สีฟ้า (สูตรเย็น)' }] },
   { id: 8, question: "อาการที่ตาของคุณเป็นอย่างไร?", options: [{ label: "ฝุ่นเข้าตา / ต้องการล้างตา", next: 'result', recommendation: 'น้ำยาล้างตาออฟซ่า' }, { label: "คันตา / ตาแดงจากอาการแพ้", next: 'result', recommendation: 'ยาแก้แพ้ระคายเคืองตา' }] }
 ];
@@ -489,5 +489,6 @@ export default function App() {
     </div>
   );
 }
+
 
 
