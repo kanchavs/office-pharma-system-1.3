@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 // URL Google Apps Script
 const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbxbbs_hgxvTmnCWomqETbN0PgZ3li1haBnBAJIm2VNGEFSdRF9jHvTuBS6rcwSMsFtrNQ/exec"; 
+
+
 const BRANCHES = ["โรงอัดรังสิต", "โรงอัด DC.วังน้อย", "โรงอัดเชียงใหม่", "โรงอัดสายไหม", "โรงอัดพานทอง", "โรงอัดพานทอง 2", "โรงอัดระยอง", "โรงอัดปทุมธานี", "โรงอัดอยุธยา", "โรงอัดบางบัวทอง", "โรงอัดเพชรบุรี", "โรงอัดโคราช", "โรงอัดขอนแก่น", "โรงอัดอุดรธานี", "โรงอัดหาดใหญ่", "โรงอัดพัทยา", "โรงอัดศรีนครินทร์", "โรงอัดมีนบุรี", "โรงอัดบ่อวิน1", "โรงอัดบ่อวิน2", "โรงอัดปิ่นทอง", "โรงอัดบางใหญ่"];
 
 // นิยามประเภทหลัก - แยกสีให้ชัดเจนตามประเภท
@@ -563,3 +565,4 @@ export default function App() {
     </div>
   );
 }
+
