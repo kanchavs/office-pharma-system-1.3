@@ -246,8 +246,8 @@ export default function App() {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8 text-center">
         <div className="w-24 h-24 bg-sky-50 rounded-[2.5rem] mx-auto mb-8 flex items-center justify-center shadow-xl shadow-sky-100/50 text-4xl">💊</div>
-        <h1 className="text-4xl font-extrabold text-slate-900 mb-3 tracking-tight">Office Pharma</h1>
-        <p className="text-slate-400 font-bold text-xs mb-12 uppercase tracking-[0.2em]">Inventory System</p>
+        <h1 className="text-4xl font-extrabold text-slate-900 mb-3 tracking-tight">RECYCLING MED-CARE</h1>
+        <p className="text-slate-400 font-bold text-xs mb-12 uppercase tracking-[0.2em]">A Pharma Recycling Operation</p>
         <div className="space-y-4 w-full max-w-sm">
           <select value={selectedBranch} onChange={(e) => setSelectedBranch(e.target.value)} className="w-full h-16 bg-slate-50 border-2 border-slate-50 p-4 px-6 rounded-2xl font-bold text-lg text-slate-700 outline-none focus:border-sky-300 transition-all appearance-none">
             <option value="" disabled>เลือกโรงอัดของคุณ...</option>
@@ -290,7 +290,7 @@ export default function App() {
           <div>
             {/* ส่วนที่แก้ไข: ปรับขนาดชื่อโรงอัดให้ใหญ่ขึ้นและเด่นชัดขึ้น */}
             <p className="text-[13px] font-black text-sky-600 uppercase tracking-tight leading-tight mb-0.5">{selectedBranch}</p>
-            <h1 className="text-xs font-bold text-slate-400 tracking-tight leading-none">Office Pharma System</h1>
+            <h1 className="text-xs font-bold text-slate-400 tracking-tight leading-none">RECYCLING MED-CARE SYSTEM</h1>
           </div>
         </div>
         <div className="flex gap-2">
@@ -545,3 +545,4 @@ export default function App() {
     </div>
   );
 }
+
