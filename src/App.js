@@ -347,7 +347,7 @@ export default function App() {
                 <div className="text-5xl mb-4">✅</div>
                 <h4 className="text-[11px] font-black text-slate-400 uppercase mb-1">คำแนะนำ</h4>
                 <p className="text-3xl font-black text-slate-900">{checkerResult.med}</p>
-                <p className="text-sm text-slate-500 bg-slate-50 p-4 rounded-2xl border border-slate-100">{checkerResult.note || 'กรุณาตรวจสอบวิธีการใช้อีกครั้งก่อนรับประทาน'}</p>
+                <p className="text-sm text-slate-500 bg-slate-50 p-4 rounded-2xl border border-slate-100">{checkerResult.note || 'กรุณาตรวจสอบวิธีการใช้อีกครั้ง'}</p>
                 <div className="space-y-3 pt-4">
                   <button onClick={() => { setActiveTab('inventory'); setSearchTerm(checkerResult.med); setCheckerResult(null); setCheckerStep(1); }} className="w-full py-5 bg-indigo-600 text-white font-bold rounded-3xl shadow-lg active:scale-95 transition-transform">ไปที่คลังยา</button>
                   <button onClick={() => { setCheckerStep(1); setCheckerResult(null); }} className="w-full py-4 bg-slate-100 text-slate-600 font-bold rounded-3xl text-sm transition-all">เริ่มประเมินใหม่</button>
@@ -489,4 +489,5 @@ export default function App() {
     </div>
   );
 }
+
 
