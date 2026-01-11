@@ -510,7 +510,7 @@ export default function App() {
 
       <nav className="fixed bottom-0 inset-x-0 bg-white border-t border-slate-100 px-6 py-4 flex justify-around items-center z-50 shadow-[0_-10px_30px_-15px_rgba(0,0,0,0.1)] text-center">
         <button onClick={() => setActiveTab('inventory')} className={`flex flex-col items-center gap-1 transition-all ${activeTab === 'inventory' ? 'text-sky-500 scale-110 font-bold' : 'text-slate-300'}`}>
-          <span className="text-xl">📊</span>
+          <span className="text-xl">💊</span>
           <span className="text-[9px] font-black uppercase">คลังยา</span>
         </button>
         <button onClick={() => setActiveTab('checker')} className={`flex flex-col items-center gap-1 transition-all ${activeTab === 'checker' ? 'text-indigo-500 scale-110 font-bold' : 'text-slate-300'}`}>
@@ -518,10 +518,11 @@ export default function App() {
           <span className="text-[9px] font-black uppercase">เช็กอาการ</span>
         </button>
         <button onClick={() => setActiveTab('guide')} className={`flex flex-col items-center gap-1 transition-all ${activeTab === 'guide' ? 'text-emerald-500 scale-110 font-bold' : 'text-slate-300'}`}>
-          <span className="text-xl">📖</span>
-          <span className="text-[9px] font-black uppercase">คู่มือ</span>
+          <span className="text-xl">🚑</span>
+          <span className="text-[9px] font-black uppercase">ปฐมพยาบาล</span>
         </button>
       </nav>
     </div>
   );
 }
+
